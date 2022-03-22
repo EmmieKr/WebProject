@@ -1,7 +1,4 @@
 <template>
-  <nav>
-    <router-link to="/">To Do List</router-link>
-  </nav>
   <router-view/>
 </template>
 

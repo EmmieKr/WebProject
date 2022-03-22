@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import ToDoList from '../views/ToDoList.vue'
 
 const routes = [
   {
     path: '/',
     name: 'todolist',
-    component: () => import('../views/ToDoList.vue')
+    component: ToDoList
   }
 ]
 

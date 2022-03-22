@@ -7,15 +7,25 @@
         <h1>To Do List</h1>
         <div class="wrapper">
             <div class="formContent">
-                <form>
-                    <input type="text" id="task" name="login" placeholder="New To Do">
+                <form @submit.prevent="addTodoList">
+                    <input type="text" name="todo" placeholder="New To Do"
+                    v-model="todo.name">
                     <input type="submit" value="Add">
                 </form>
             </div>
             <div class="formToDo">
                 <div class="container">
                     <div class="row">
-                        <div class="col-sm">To Do</div>
+                        <div class="col-sm">To Do
+                          <section v-for="(todo,index) in todoTab" :key="todo.id">
+                          <!--<div v-if="todo.processToDo">-->
+                            <button title="Doing" @click="updateToDoDoing(index,todo.id)"></button>
+                            <button title="Done" @click="updateToDoDone(index,todo.id)"></button>
+                            <button title="Delete" @click="deleteTodo(index,todo.id)"></button>
+                            {{todo.name}}
+                          <!--</div>-->
+                        </section>
+                        </div>
                         <div class="col-sm">Doing</div>
                         <div class="col-sm">Done</div>
                     </div>
@@ -25,6 +35,83 @@
     </body>
 </html>
 </template>
+
+<script>
+import TodolistDataService from '@/services/TodolistDataService'
+export default {
+  data () {
+    return {
+      submitted: false,
+      todo: {
+        name: '',
+        processToDo: true,
+        processDoing: false,
+        processDone: false
+      },
+      todoTab: []
+    }
+  },
+  methods: {
+    addTodoList () {
+      this.todoTab.push({ name: this.todo.name })
+      this.submitted = true
+      console.log(this.todo)
+    },
+    saveTodolist () {
+      TodolistDataService.create(this.todo)
+        .then(response => {
+          this.addTodoList(this.todo)
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    updateTodoList (todoId, todoData) {
+      TodolistDataService.update(todoId, todoData)
+        .then(response => {
+          console.log(response.todoData)
+          this.submitted = true
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    deleteProduct () {
+      TodolistDataService.delete(this.id)
+        .then(response => {
+          console.log(response.data)
+          this.removeInv(this.productIndex)
+          this.remove(this.product.name)
+          this.$router.push({ name: 'home' })
+        })
+        .catch(e => {
+          console.log(e)
+        })
+    },
+    removeInventory (index) {
+      this.inventory.splice(index, 1)
+    },
+    updateToDoDone (index, todoId) {
+      this.todoTab[index].processToDo = false
+      this.todoTab[index].processDoing = false
+      this.todoTab[index].processDone = true
+      this.updateTodoList(todoId, this.todoTab[index])
+    },
+    updateToDoDoing (index, todoId) {
+      this.todoTab[index].processToDo = false
+      this.todoTab[index].processDoing = true
+      this.todoTab[index].processDone = false
+      this.updateTodoList(todoId, this.todoTab[index])
+    },
+    updateToDo (index, todoId) {
+      this.todoTab[index].processToDo = true
+      this.todoTab[index].processDoing = false
+      this.todoTab[index].processDone = false
+      this.updateTodoList(todoId, this.todoTab[index])
+    }
+  }
+}
+</script>
 
 <style scoped>
 
@@ -40,7 +127,6 @@ h1 {
   font-size: 40px;
   font-weight: 600;
   text-transform: uppercase;
-  display:inline-block;
   margin: 40px 8px 10px 8px;
   color: #56baed;
 }
