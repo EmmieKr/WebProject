@@ -1,39 +1,105 @@
 <template>
-<html>
+  <html>
     <head>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+      <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
+      />
     </head>
     <body>
-        <h1>To Do List</h1>
-        <div class="wrapper">
-            <div class="formContent">
-                <form @submit.prevent="addTodoList">
-                    <input type="text" name="todo" placeholder="New To Do"
-                    v-model="todo.name">
-                    <input type="submit" value="Add">
-                </form>
-            </div>
-            <div class="formToDo">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm">To Do
-                          <section v-for="(todo,index) in todoTab" :key="todo.id">
-                          <!--<div v-if="todo.processToDo">-->
-                            <button title="Doing" @click="updateToDoDoing(index,todo.id)"></button>
-                            <button title="Done" @click="updateToDoDone(index,todo.id)"></button>
-                            <button title="Delete" @click="deleteTodo(index,todo.id)"></button>
-                            {{todo.name}}
-                          <!--</div>-->
-                        </section>
-                        </div>
-                        <div class="col-sm">Doing</div>
-                        <div class="col-sm">Done</div>
-                    </div>
-                </div>
-            </div>
+      <h1>To Do List</h1>
+      <div class="wrapper">
+        <div class="formContent">
+          <form @submit.prevent="addTodoList">
+            <input
+              type="text"
+              name="todo"
+              placeholder="New To Do"
+              v-model="todo.name"
+            />
+            <input type="submit" value="Add" />
+          </form>
         </div>
+        <div class="formToDo">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                To Do
+                <section v-for="(todo, index) in todoTab" :key="todo.id">
+                  <!--<div v-if="todo.processToDo">-->
+                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
+                    <img
+                      src="../assets/delete.webp"
+                      alt=""
+                      style="width: 14px"
+                    />
+                  </button>
+                  {{ todo.name }}
+                  <button
+                    title="Doing"
+                    @click="updateToDoDoing(index, todo.id)"
+                  ></button>
+                  <button
+                    title="Done"
+                    @click="updateToDoDone(index, todo.id)"
+                  ></button>
+                  <!--</div>-->
+                </section>
+              </div>
+              <div class="col-sm">
+                Doing
+                <section v-for="(todo, index) in todoTab" :key="todo.id">
+                  <!--<div v-if="todo.processToDo">-->
+                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
+                    <img
+                      src="../assets/delete.webp"
+                      alt=""
+                      style="width: 14px"
+                    />
+                  </button>
+                  {{ todo.name }}
+                  <button
+                    title="To Do"
+                    @click="updateToDo(index, todo.id)"
+                  ></button>
+                  <button
+                    title="Done"
+                    @click="updateToDoDone(index, todo.id)"
+                  ></button>
+                  <!--</div>-->
+                </section>
+              </div>
+              <div class="col-sm">
+                Done
+                <section v-for="(todo, index) in todoTab" :key="todo.id">
+                  <!--<div v-if="todo.processToDo">-->
+                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
+                    <img
+                      src="../assets/delete.webp"
+                      alt=""
+                      style="width: 14px"
+                    />
+                  </button>
+                  {{ todo.name }}
+                  <button
+                    title="To Do"
+                    @click="updateToDo(index, todo.id)"
+                  ></button>
+                  <button
+                    title="Doing"
+                    @click="updateToDoDoing(index, todo.id)"
+                  ></button>
+                  <!--</div>-->
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </body>
-</html>
+  </html>
 </template>
 
 <script>
@@ -59,37 +125,35 @@ export default {
     },
     saveTodolist () {
       TodolistDataService.create(this.todo)
-        .then(response => {
+        .then((response) => {
           this.addTodoList(this.todo)
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e)
         })
     },
     updateTodoList (todoId, todoData) {
       TodolistDataService.update(todoId, todoData)
-        .then(response => {
+        .then((response) => {
           console.log(response.todoData)
           this.submitted = true
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e)
         })
     },
-    deleteProduct () {
-      TodolistDataService.delete(this.id)
-        .then(response => {
+    deleteTodoList (index, todoId) {
+      TodolistDataService.delete(todoId)
+        .then((response) => {
           console.log(response.data)
-          this.removeInv(this.productIndex)
-          this.remove(this.product.name)
-          this.$router.push({ name: 'home' })
+          this.removeTodoTab(index)
         })
-        .catch(e => {
+        .catch((e) => {
           console.log(e)
         })
     },
-    removeInventory (index) {
-      this.inventory.splice(index, 1)
+    removeTodoTab (index) {
+      this.todoTab.splice(index, 1)
     },
     updateToDoDone (index, todoId) {
       this.todoTab[index].processToDo = false
@@ -109,15 +173,24 @@ export default {
       this.todoTab[index].processDone = false
       this.updateTodoList(todoId, this.todoTab[index])
     }
+  },
+  mounted () {
+    TodolistDataService.getAll()
+      .then((response) => {
+        this.todoTab = response.data
+        console.log(response.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
   }
 }
 </script>
 
 <style scoped>
-
 a {
   color: #92badd;
-  display:inline-block;
+  display: inline-block;
   text-decoration: none;
   font-weight: 400;
 }
@@ -149,20 +222,20 @@ h1 {
   max-width: 450px;
   position: relative;
   padding: 0px;
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 10px 0px;
 }
 
-.formToDo{
-border-radius: 10px 10px 10px 10px;
+.formToDo {
+  border-radius: 10px 10px 10px 10px;
   background: white;
   padding: 0px;
   width: 100%;
   max-width: auto;
   position: relative;
   padding: 10px;
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
   text-align: center;
   margin: 10px 0px;
 }
@@ -176,7 +249,7 @@ border-radius: 10px 10px 10px 10px;
   border-radius: 0 0 10px 10px;
 }
 
-input[type=submit]  {
+input[type="submit"] {
   background-color: #56baed;
   border: none;
   color: white;
@@ -186,18 +259,18 @@ input[type=submit]  {
   display: inline-block;
   text-transform: uppercase;
   font-size: 13px;
-  -webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
-  box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4);
+  -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
+  box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
   -webkit-border-radius: 5px 5px 5px 5px;
   border-radius: 5px 5px 5px 5px;
   margin: 5px 20px 40px 20px;
 }
 
-input[type=submit]:hover {
+input[type="submit"]:hover {
   background-color: #39ace7;
 }
 
-input[type=submit]:active  {
+input[type="submit"]:active {
   -moz-transform: scale(0.95);
   -webkit-transform: scale(0.95);
   -o-transform: scale(0.95);
@@ -205,7 +278,9 @@ input[type=submit]:active  {
   transform: scale(0.95);
 }
 
-input[type=text], input[type=password], input[type=email] {
+input[type="text"],
+input[type="password"],
+input[type="email"] {
   background-color: #f6f6f6;
   border: none;
   color: #0d0d0d;
@@ -219,17 +294,20 @@ input[type=text], input[type=password], input[type=email] {
   border-radius: 5px 5px 5px 5px;
 }
 
-input[type=text]:focus ,input[type=email]:focus, input[type=password]:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
 
-input[type=text]:placeholder ,input[type=email]:placeholder, input[type=password]:placeholder {
+input[type="text"]:placeholder,
+input[type="email"]:placeholder,
+input[type="password"]:placeholder {
   color: #cccccc;
 }
 
 .underlineHover:hover {
   color: #0d0d0d;
 }
-
 </style>
