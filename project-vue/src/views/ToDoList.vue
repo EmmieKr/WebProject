@@ -29,22 +29,21 @@
                 To Do
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
                   <!--<div v-if="todo.processToDo">-->
-                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
+                  <button title="Delete" @click="deleteTodoList(index, todo.id)">
                     <img
                       src="../assets/delete.webp"
-                      alt=""
-                      style="width: 14px"
                     />
                   </button>
                   {{ todo.name }}
                   <button
                     title="Doing"
                     @click="updateToDoDoing(index, todo.id)"
-                  ></button>
+                  >
+                  <img src="../assets/doing.png" style="width:14px"></button>
                   <button
                     title="Done"
                     @click="updateToDoDone(index, todo.id)"
-                  ></button>
+                  ><img src="../assets/done.png" style="width:14px"></button>
                   <!--</div>-->
                 </section>
               </div>
@@ -52,22 +51,20 @@
                 Doing
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
                   <!--<div v-if="todo.processToDo">-->
-                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
+                  <button title="Delete" @click="deleteTodoList(index, todo.id)">
                     <img
                       src="../assets/delete.webp"
-                      alt=""
-                      style="width: 14px"
                     />
                   </button>
                   {{ todo.name }}
                   <button
                     title="To Do"
                     @click="updateToDo(index, todo.id)"
-                  ></button>
+                  ><img src="../assets/todo.png"></button>
                   <button
                     title="Done"
                     @click="updateToDoDone(index, todo.id)"
-                  ></button>
+                  ><img src="../assets/done.png"></button>
                   <!--</div>-->
                 </section>
               </div>
@@ -75,22 +72,18 @@
                 Done
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
                   <!--<div v-if="todo.processToDo">-->
-                  <button title="Delete" @click="removeTodoTab(index, todo.id)">
-                    <img
-                      src="../assets/delete.webp"
-                      alt=""
-                      style="width: 14px"
-                    />
+                  <button title="Delete" @click="deleteTodoList(index, todo.id)">
+                    <img src="../assets/delete.webp"/>
                   </button>
                   {{ todo.name }}
                   <button
                     title="To Do"
                     @click="updateToDo(index, todo.id)"
-                  ></button>
+                  ><img src="../assets/todo.png"></button>
                   <button
                     title="Doing"
                     @click="updateToDoDoing(index, todo.id)"
-                  ></button>
+                  ><img src="../assets/doing.png"></button>
                   <!--</div>-->
                 </section>
               </div>
@@ -176,9 +169,9 @@ export default {
   },
   mounted () {
     TodolistDataService.getAll()
-      .then((response) => {
-        this.todoTab = response.data
-        console.log(response.data)
+      .then((res) => {
+        this.todoTab = res.data
+        console.log(res.data)
       })
       .catch((e) => {
         console.log(e)
@@ -270,14 +263,6 @@ input[type="submit"]:hover {
   background-color: #39ace7;
 }
 
-input[type="submit"]:active {
-  -moz-transform: scale(0.95);
-  -webkit-transform: scale(0.95);
-  -o-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  transform: scale(0.95);
-}
-
 input[type="text"],
 input[type="password"],
 input[type="email"] {
@@ -309,5 +294,14 @@ input[type="password"]:placeholder {
 
 .underlineHover:hover {
   color: #0d0d0d;
+}
+
+button{
+  border: none;
+  background: none;
+}
+
+button img{
+  width: 20px;
 }
 </style>
