@@ -1,0 +1,1 @@
+insert into todolists(name, processToDo, processDoing, processDone,createdAt, updatedAt) values ('make the laundry',1,0,0,NOW(),NOW()),('cook',0,1,0,NOW(),NOW()),('clean the house',0,0,1,NOW(),NOW());

@@ -8,3 +8,4 @@ How to install the system and the  database :
 7) Open a new terminal and put you in the project-vue folder
 8) Write and run the command : npm run serve
 9) Then you can go on your browser with the link that is in you terminal (example : http://localhost:8081/)
+10) you must have like in the whatToHave.png file
