@@ -15,7 +15,7 @@
           <form @submit.prevent="addTodoList">
             <input
               type="text"
-              name="todo"
+              name="todotask"
               placeholder="New To Do"
               v-model="todo.name"
             />
@@ -26,9 +26,9 @@
           <div class="container">
             <div class="row">
               <div class="col-sm">
-                To Do
+                To Do <img src="../assets/todo.png">
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
-                  <!--<div v-if="todo.processToDo">-->
+                  <div v-if="todo.processToDo==1">
                   <button title="Delete" @click="deleteTodoList(index, todo.id)">
                     <img
                       src="../assets/delete.webp"
@@ -39,18 +39,18 @@
                     title="Doing"
                     @click="updateToDoDoing(index, todo.id)"
                   >
-                  <img src="../assets/doing.png" style="width:14px"></button>
+                  <img src="../assets/doing.png"></button>
                   <button
                     title="Done"
                     @click="updateToDoDone(index, todo.id)"
-                  ><img src="../assets/done.png" style="width:14px"></button>
-                  <!--</div>-->
+                  ><img src="../assets/done.png"></button>
+                  </div>
                 </section>
               </div>
               <div class="col-sm">
-                Doing
+                Doing <img src="../assets/doing.png">
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
-                  <!--<div v-if="todo.processToDo">-->
+                  <div v-if="todo.processDoing==1">
                   <button title="Delete" @click="deleteTodoList(index, todo.id)">
                     <img
                       src="../assets/delete.webp"
@@ -65,13 +65,13 @@
                     title="Done"
                     @click="updateToDoDone(index, todo.id)"
                   ><img src="../assets/done.png"></button>
-                  <!--</div>-->
+                  </div>
                 </section>
               </div>
               <div class="col-sm">
-                Done
+                Done <img src="../assets/done.png">
                 <section v-for="(todo, index) in todoTab" :key="todo.id">
-                  <!--<div v-if="todo.processToDo">-->
+                  <div v-if="todo.processDone==1">
                   <button title="Delete" @click="deleteTodoList(index, todo.id)">
                     <img src="../assets/delete.webp"/>
                   </button>
@@ -84,7 +84,7 @@
                     title="Doing"
                     @click="updateToDoDoing(index, todo.id)"
                   ><img src="../assets/doing.png"></button>
-                  <!--</div>-->
+                  </div>
                 </section>
               </div>
             </div>
@@ -103,27 +103,35 @@ export default {
       submitted: false,
       todo: {
         name: '',
-        processToDo: true,
-        processDoing: false,
-        processDone: false
+        processToDo: 1,
+        processDoing: 0,
+        processDone: 0
       },
       todoTab: []
     }
   },
   methods: {
     addTodoList () {
-      this.todoTab.push({ name: this.todo.name })
+      this.todoTab.push({ name: this.todo.name, processToDo: 1, processDoing: 0, processDone: 0 })
       this.submitted = true
       console.log(this.todo)
     },
     saveTodolist () {
+      console.log(this.todo)
       TodolistDataService.create(this.todo)
         .then((response) => {
+          console.log(this.todo)
           this.addTodoList(this.todo)
         })
         .catch((e) => {
           console.log(e)
         })
+      this.todo = {
+        name: this.todo.name,
+        processToDo: 1,
+        processDoing: 0,
+        processDone: 0
+      }
     },
     updateTodoList (todoId, todoData) {
       TodolistDataService.update(todoId, todoData)
@@ -149,21 +157,21 @@ export default {
       this.todoTab.splice(index, 1)
     },
     updateToDoDone (index, todoId) {
-      this.todoTab[index].processToDo = false
-      this.todoTab[index].processDoing = false
-      this.todoTab[index].processDone = true
+      this.todoTab[index].processToDo = 0
+      this.todoTab[index].processDoing = 0
+      this.todoTab[index].processDone = 1
       this.updateTodoList(todoId, this.todoTab[index])
     },
     updateToDoDoing (index, todoId) {
-      this.todoTab[index].processToDo = false
-      this.todoTab[index].processDoing = true
-      this.todoTab[index].processDone = false
+      this.todoTab[index].processToDo = 0
+      this.todoTab[index].processDoing = 1
+      this.todoTab[index].processDone = 0
       this.updateTodoList(todoId, this.todoTab[index])
     },
     updateToDo (index, todoId) {
-      this.todoTab[index].processToDo = true
-      this.todoTab[index].processDoing = false
-      this.todoTab[index].processDone = false
+      this.todoTab[index].processToDo = 1
+      this.todoTab[index].processDoing = 0
+      this.todoTab[index].processDone = 0
       this.updateTodoList(todoId, this.todoTab[index])
     }
   },
@@ -278,6 +286,17 @@ input[type="email"] {
   width: 85%;
   border-radius: 5px 5px 5px 5px;
 }
+input[name="todoProcess"] {
+  background-color: lightskyblue;
+  border: none;
+  color: #0d0d0d;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 30%;
+  border-radius: 5px 5px 5px 5px;
+}
 
 input[type="text"]:focus,
 input[type="email"]:focus,
@@ -301,7 +320,11 @@ button{
   background: none;
 }
 
-button img{
+img{
   width: 20px;
+}
+
+input[name="todoProcess"]{
+  display: inline;
 }
 </style>
